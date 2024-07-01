@@ -1,0 +1,126 @@
+class Candidate:
+    def __init__(self, name, party):
+        self.name = name
+        self.party = party
+        self.votes = 0
+
+    def __str__(self):
+        return f"{self.name} ({self.party}) - Votes: {self.votes}"
+
+    def add_vote(self):
+        self.votes += 1
+
+class Voter:
+    def __init__(self, name, voter_id):
+        self.name = name
+        self.voter_id = voter_id
+        self.voted = False
+
+    def __str__(self):
+        return f"Voter: {self.name}, ID: {self.voter_id}, Voted: {self.voted}"
+
+    def vote(self, candidate):
+        if not self.voted:
+            candidate.add_vote()
+            self.voted = True
+            print(f"Thank you, {self.name}, for voting!")
+        else:
+            print(f"Sorry, {self.name}, you have already voted.")
+
+class Election:
+    def __init__(self, candidates):
+        self.candidates = candidates
+
+    def list_candidates(self):
+        print("Candidates:")
+        for candidate in self.candidates:
+            print(candidate)
+
+    def find_candidate(self, candidate_name):
+        for candidate in self.candidates:
+            if candidate.name == candidate_name:
+                return candidate
+        return None
+
+class ElectionSystem:
+    def __init__(self, election):
+        self.election = election
+        self.voters = []
+
+    def add_voter(self, voter):
+        self.voters.append(voter)
+
+    def display_voters(self):
+        print("Registered Voters:")
+        for voter in self.voters:
+            print(voter)
+
+    def conduct_election(self):
+        print("Welcome to the Election!")
+        self.election.list_candidates()
+
+        while True:
+            print("Please select your name and your voter id from registered list!")
+            print("""Registered Voters:
+                voter1 = Voter("Arjun", "1234")
+                voter2 = Voter("Nirmal", "5678")""")
+            voter_name = input("Enter your name: ")
+            voter_id = input("Enter your voter ID: ")
+
+            # Validate if voter is registered
+            is_registered = False
+            for voter in self.voters:
+                if voter.name == voter_name and voter.voter_id == voter_id:
+                    is_registered = True
+                    current_voter = voter
+                    break
+
+            if not is_registered:
+                print("Sorry, you are not registered as a voter.")
+                continue
+
+            # Check if voter has already voted
+            if current_voter.voted:
+                print("Sorry, you have already voted.")
+                continue
+
+            # Display candidates and allow voter to vote
+            self.election.list_candidates()
+            candidate_name = input("Enter the name of the candidate you want to vote for: ")
+            selected_candidate = self.election.find_candidate(candidate_name)
+
+            if selected_candidate:
+                current_voter.vote(selected_candidate)
+            else:
+                print("Invalid candidate name. Please try again.")
+            
+            # Ask if another voter wants to vote
+            another_vote = input("Do you want another voter to vote? (yes or no): ")
+            if another_vote.lower() != "yes":
+                print("Thank you for voting! The election is now closed.")
+                break
+
+# Example Usage:
+if __name__ == "__main__":
+    # Creating candidates
+    candidate1 = Candidate("Arun", "Independent")
+    candidate2 = Candidate("Kumar", "Green Party")
+    candidate3 = Candidate("Vicky", "Liberal Party")
+
+    candidates = [candidate1, candidate2, candidate3]
+
+    # Creating an Election instance
+    election = Election(candidates)
+
+    # Creating an ElectionSystem instance
+    election_system = ElectionSystem(election)
+
+    # Registering voters
+    voter1 = Voter("Arjun", "1234")
+    voter2 = Voter("Nirmal", "5678")
+
+    election_system.add_voter(voter1)
+    election_system.add_voter(voter2)
+
+    # Conducting the election
+    election_system.conduct_election()

@@ -1,0 +1,95 @@
+class Movie:
+    def __init__(self, title, genre, duration, age_limit):
+        self.title = title
+        self.genre = genre
+        self.duration = duration
+        self.age_limit = age_limit
+
+    def __str__(self):
+        return f"{self.title} ({self.genre}) - {self.duration} mins, Rated {self.age_limit}"
+
+class Theater:
+    def __init__(self, name, location):
+        self.name = name
+        self.location = location
+        self.movies = []
+
+    def add_movie(self, movie):
+        self.movies.append(movie)
+
+    def display_movies(self):
+        print(f"Movies playing at {self.name}:")
+        for idx, movie in enumerate(self.movies, start=1):
+            print(f"{idx}. {movie}")
+
+    def get_movie_by_index(self, index):
+        if 1 <= index <= len(self.movies):
+            return self.movies[index - 1]
+        else:
+            return None
+
+class Ticket:
+    def __init__(self, movie, seat_number):
+        self.movie = movie
+        self.seat_number = seat_number
+
+    def __str__(self):
+        return f"Ticket for {self.movie.title}, Seat: {self.seat_number}"
+
+class Booking:
+    def __init__(self, theater):
+        self.theater = theater
+        self.tickets = []
+
+    def add_ticket(self, ticket):
+        self.tickets.append(ticket)
+
+    def display_booking_details(self):
+        print(f"Theater: {self.theater.name}, Location: {self.theater.location}")
+        print("Booking Details:")
+        for ticket in self.tickets:
+            print(ticket)
+        print("Enjoy the movie!")
+
+# Function to handle ticket booking process
+def book_tickets():
+    print("Welcome to the Movie Tickets Booking System!")
+    print("Please select a theater:")
+
+    # Creating a Theater object
+    theater = Theater("Blue Cinemas", "Vellore")
+
+    # Adding movies to the theater
+    theater.add_movie(Movie("Kalki", "Fantacy", 148, "PG-13"))
+    theater.add_movie(Movie("Garudan", "Action", 152, "PG-13"))
+    theater.add_movie(Movie("Maharaja", "Thriller", 169, "PG-13"))
+
+    # Displaying available movies
+    theater.display_movies()
+
+    # Selecting a movie
+    while True:
+        try:
+            movie_index = int(input("Enter the number of the movie you want to watch: "))
+            selected_movie = theater.get_movie_by_index(movie_index)
+            if selected_movie:
+                break
+            else:
+                print("Invalid movie selection. Please try again.")
+        except ValueError:
+            print("Invalid input. Please enter a number.")
+
+    # Booking tickets
+    num_tickets = int(input("How many tickets do you want to book? "))
+    for i in range(num_tickets):
+        seat_number = input(f"Enter seat number for ticket {i + 1}: ")
+        ticket = Ticket(selected_movie, seat_number)
+        theater_booking.add_ticket(ticket)
+
+    # Display booking details
+    theater_booking.display_booking_details()
+
+if __name__ == "__main__":
+    # Starting the booking process
+    theater_booking = Booking(Theater("Blue Cinemas", "Vellore"))  # Creating the Booking instance
+    book_tickets()
